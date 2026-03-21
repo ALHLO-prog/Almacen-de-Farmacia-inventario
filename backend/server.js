@@ -2,8 +2,8 @@ import { createServer } from "node:http"
 
 
 const server = createServer((req, res) => {
-    console.log("jij")
-    res.end("hi")
+
+
 })
 
 server.listen(4444, () => {
