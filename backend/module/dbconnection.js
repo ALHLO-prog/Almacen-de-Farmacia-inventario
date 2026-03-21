@@ -1,13 +1,6 @@
-import mysql from "mysql2/promise";
+import knex from 'knex';
+import { development } from '../knexfile.js';
 
-config = {
-    host : "",
-    port: "3306",
-    user : "root",
-    password: "",
-    database: "inventario_farmacia_hlo"
-}
+const db = knex(development)
 
-const connection = await mysql.createConnection(config)
-
-return connection
+export default db

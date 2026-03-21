@@ -1,0 +1,50 @@
+/**
+ * @param { import("knex").Knex } knex
+ * @returns { Promise<void> }
+ */
+exports.up = function(knex) {
+  return knex.schema
+    .createTable('usuarios', table => {
+      table.integer('ci').primary().unsigned(); // Cédula como llave primaria
+      table.string('contraseña').notNullable();
+      table.string('nombre').notNullable();
+      table.string('cargo');
+    })
+    .createTable('medicamentos', table => {
+      table.increments('id'); // ID autoincrementada
+      table.string('nombre').notNullable();
+      table.string('alt_nombre');
+      table.string('tipo');
+    })
+    .createTable('lotes', table => {
+      table.increments('id');
+      table.integer('medicamento_id').unsigned().references('id').inTable('medicamentos');
+      table.string('concentracion');
+      table.string('codigo');
+      table.date('vencimiento');
+      table.integer('cantidad').defaultTo(0);
+    })
+    .createTable('registros', table => {
+      table.increments('id');
+      table.integer('medicamento_id').unsigned().references('id').inTable('medicamentos');
+      table.integer('usuario_id').unsigned().references('ci').inTable('usuarios');
+      table.date('fecha').defaultTo(knex.raw('(CURRENT_DATE)'));
+      table.string('hora');
+      table.integer('entrada').defaultTo(0);
+      table.integer('salida').defaultTo(0);
+      table.string('nota');
+    });
+};
+
+/**
+ * @param { import("knex").Knex } knex
+ * @returns { Promise<void> }
+*/
+
+exports.down = function(knex) {
+    return knex.schema
+    .dropTableIfExists('registros')
+    .dropTableIfExists('lotes')
+    .dropTableIfExists('medicamentos')
+    .dropTableIfExists('usuarios');
+};
