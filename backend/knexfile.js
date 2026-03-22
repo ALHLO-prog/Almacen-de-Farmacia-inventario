@@ -10,8 +10,8 @@ export const development = {
     user: 'root',
     password: '',
     database: 'inventario_farmacia_hlo',
-    migrations: {
+  },
+  migrations: {
       directory: './migrations'
     }
-  }
 };

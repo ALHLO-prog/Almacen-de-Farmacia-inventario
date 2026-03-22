@@ -2,7 +2,7 @@
  * @param { import("knex").Knex } knex
  * @returns { Promise<void> }
  */
-exports.up = function(knex) {
+export function up(knex) {
   return knex.schema
     .createTable('usuarios', table => {
       table.integer('ci').primary().unsigned(); // Cédula como llave primaria
@@ -33,6 +33,10 @@ exports.up = function(knex) {
       table.integer('entrada').defaultTo(0);
       table.integer('salida').defaultTo(0);
       table.string('nota');
+    }).createTable('solicitud_registro', table => {
+      table.increments('id');
+      table.string('nombre');
+      table.integer('ci');
     });
 };
 
@@ -41,10 +45,11 @@ exports.up = function(knex) {
  * @returns { Promise<void> }
 */
 
-exports.down = function(knex) {
+export function down(knex) {
     return knex.schema
     .dropTableIfExists('registros')
     .dropTableIfExists('lotes')
     .dropTableIfExists('medicamentos')
-    .dropTableIfExists('usuarios');
+    .dropTableIfExists('usuarios')
+    .dropTableIfExists('solicitud_registro');
 };
