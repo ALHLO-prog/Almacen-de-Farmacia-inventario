@@ -1,21 +1,31 @@
 import Router from "express"
-import db from "../module/dbconnection.js";
+import db from "../dbconnection.js";
 
 const router = Router()
 
-router.get('/', async (res) => {
-  const solicitudes = await db('solicitud_registro').select('*')
-  res.json(solicitudes)
+router.get('/', async (req,res) => {
+  try {
+    const solicitudes = await db('solicitud_registro').select('*')
+    res.json(solicitudes)
+  } catch (e) {
+    res.status(500).json({ mensaje: 'currió algo inesperado'})
+  }
 })
 
-router.get('/request/:name/:ci', async (req, res) => {   //pasar los parametros a body
+router.post('/request', async (req, res) => {   //pasar los parametros a body
   try {
-    const { name, ci } = req.params;
+    const { name, ci } = req.body;
   
     await db('solicitud_registro').insert({
       nombre : name,
       ci: ci
     })
+
+    req.io.emit('nueva_solicitud', {
+      nombre: name,
+      ci: ci
+    })
+
     
     res.json({ mensaje: "debe esperar a que su su usuario se aprobado" });
   }
