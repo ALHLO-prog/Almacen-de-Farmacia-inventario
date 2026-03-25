@@ -12,7 +12,7 @@ router.get('/', async (req,res) => {
   }
 })
 
-router.post('/request', async (req, res) => {   //pasar los parametros a body
+router.post('/request', async (req, res) => {
   try {
     const { name, ci } = req.body;
   
@@ -27,7 +27,7 @@ router.post('/request', async (req, res) => {   //pasar los parametros a body
     })
 
     
-    res.json({ mensaje: "debe esperar a que su su usuario se aprobado" });
+    res.json({ mensaje: "debe esperar a que su usuario se aprobado" });
   }
   catch(e) {
     res.status(500).json('Ocurrió algo inesperado');

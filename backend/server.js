@@ -1,6 +1,8 @@
 import express from "express"
 import usuarioRoutes from "./routes/usuarios.js"
 import authRoutes from "./routes/auth.js"
+import medsRoutes from "./routes/medicamentos.js"
+import lotesRoutes from "./routes/lotes.js"
 import { createServer } from "http"
 import { Server } from "socket.io";
 
@@ -15,12 +17,14 @@ const io = new Server(httpServer, {
 })
 
 app.use(express.json());
-app.use((req, res, next) => {
-    req.io = io;
-    next();
-})
-app.use("/", usuarioRoutes)
+app.use((req, res, next) => { req.io = io;next();})
+app.use("/usuario", usuarioRoutes)
 app.use("/auth", authRoutes)
+app.use("/med", medsRoutes)
+app.use("/lote", lotesRoutes)
+app.get("/", (req, res) => {
+  res.send("🚀 Servidor de Farmacia corriendo correctamente");
+});
 
 io.on('connection', (socket) => {
     console.log('Un usuario se conecto', socket.id)
@@ -30,5 +34,5 @@ io.on('connection', (socket) => {
 })
 
 httpServer.listen(4444, () => {
-    console.log("server in http://localhost:4444")
+    console.log("server in http://127.0.0.1:4444")
 })
