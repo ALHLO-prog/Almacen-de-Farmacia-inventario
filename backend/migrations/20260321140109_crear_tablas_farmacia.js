@@ -28,6 +28,7 @@ export function up(knex) {
       table.increments('id');
       table.integer('medicamento_id').unsigned().references('id').inTable('medicamentos');
       table.integer('usuario_id').unsigned().references('ci').inTable('usuarios');
+      table.string('lote').notNullable();
       table.date('fecha').defaultTo(knex.raw('(CURRENT_DATE)'));
       table.string('hora');
       table.integer('entrada').defaultTo(0);

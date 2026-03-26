@@ -9,9 +9,9 @@ export const development = {
     host: '127.0.0.1',
     user: 'root',
     password: '',
-    database: 'inventario_farmacia_hlo',
+    database: 'inventario_farmacia_hlo'
   },
   migrations: {
-      directory: './migrations'
-    }
-};
+    directory: './migrations'
+  }
+}

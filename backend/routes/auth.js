@@ -1,23 +1,23 @@
-import Router from "express"
-import db from "../dbconnection.js";
+import Router from 'express'
+import db from '../dbconnection.js'
 
 const router = Router()
 
-router.get('/', async (req,res) => {
+router.get('/', async (req, res) => {
   try {
     const solicitudes = await db('solicitud_registro').select('*')
     res.json(solicitudes)
   } catch (e) {
-    res.status(500).json({ mensaje: 'currió algo inesperado'})
+    res.status(500).json({ mensaje: 'currió algo inesperado' })
   }
 })
 
 router.post('/request', async (req, res) => {
   try {
-    const { name, ci } = req.body;
-  
+    const { name, ci } = req.body
+
     await db('solicitud_registro').insert({
-      nombre : name,
+      nombre: name,
       ci: ci
     })
 
@@ -26,25 +26,22 @@ router.post('/request', async (req, res) => {
       ci: ci
     })
 
-    
-    res.json({ mensaje: "debe esperar a que su usuario se aprobado" });
+    res.json({ mensaje: 'debe esperar a que su usuario se aprobado' })
+  } catch (e) {
+    res.status(500).json('Ocurrió algo inesperado')
   }
-  catch(e) {
-    res.status(500).json('Ocurrió algo inesperado');
-  }
-
 })
 
 router.post('/register/:id', async (req, res) => {
-  const { id } = req.params; 
-  const { contraseña, cargo } = req.body; 
+  const { id } = req.params
+  const { contraseña, cargo } = req.body
 
   try {
     await db.transaction(async (trx) => {
-      const solicitud = await trx('solicitudes_registro').where({ id }).first();
+      const solicitud = await trx('solicitudes_registro').where({ id }).first()
 
       if (!solicitud) {
-        throw new Error('La solicitud no existe');
+        throw new Error('La solicitud no existe')
       }
 
       await trx('usuarios').insert({
@@ -52,15 +49,15 @@ router.post('/register/:id', async (req, res) => {
         nombre: solicitud.nombre,
         contraseña: contraseña, // usar bcrypt después
         cargo: cargo
-      });
+      })
 
-      await trx('solicitudes_registro').where({ id }).del();
-    });
+      await trx('solicitudes_registro').where({ id }).del()
+    })
 
-    res.json({ mensaje: "Usuario aprobado y cuenta creada con éxito" });
+    res.json({ mensaje: 'Usuario aprobado y cuenta creada con éxito' })
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: error.message })
   }
-});
+})
 
 export default router
