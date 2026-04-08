@@ -3,6 +3,8 @@ import usuarioRoutes from './routes/usuarios.js'
 import authRoutes from './routes/auth.js'
 import medsRoutes from './routes/medicamentos.js'
 import lotesRoutes from './routes/lotes.js'
+import pedidosRoutes from './routes/pedidos.js'
+import registrosRoutes from './routes/registros.js'
 import { createServer } from 'http'
 import { Server } from 'socket.io'
 
@@ -25,6 +27,8 @@ app.use('/usuario', usuarioRoutes)
 app.use('/auth', authRoutes)
 app.use('/med', medsRoutes)
 app.use('/lote', lotesRoutes)
+app.use('/pedido', pedidosRoutes)
+app.use('/registro', registrosRoutes)
 
 io.on('connection', (socket) => {
   console.log('Un usuario se conecto', socket.id)
