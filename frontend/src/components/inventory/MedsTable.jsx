@@ -59,11 +59,8 @@ function MedsTable() {
           slotProps={{
             panel: {
               sx: {
-                // Oculta el selector de Columna
                 '& .MuiDataGrid-filterFormColumnInput': { display: 'none' },
-                // Oculta el selector de Operador (is, contains, etc)
                 '& .MuiDataGrid-filterFormOperatorInput': { display: 'none' },
-                // Ajusta el ancho para que no quede un hueco vacío
                 '& .MuiDataGrid-filterForm': {
                   display: 'flex',
                   justifyContent: 'center'
