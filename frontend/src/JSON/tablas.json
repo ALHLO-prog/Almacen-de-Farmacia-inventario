@@ -1,0 +1,92 @@
+[
+  {
+    "id": 1,
+    "Medicamento": "Hidrocortisona",
+    "Concentracion": "500mg",
+    "Tipo": "Ampolla"
+  },
+  {
+    "id": 2,
+    "Medicamento": "Ibuprofeno",
+    "Concentracion": "400mg",
+    "Tipo": "Tableta"
+  },
+  {
+    "id": 3,
+    "Medicamento": "Amoxicilina",
+    "Concentracion": "1g",
+    "Tipo": "Cápsula"
+  },
+  {
+    "id": 4,
+    "Medicamento": "Omeprazol",
+    "Concentracion": "20mg",
+    "Tipo": "Tableta"
+  },
+  {
+    "id": 5,
+    "Medicamento": "Paracetamol",
+    "Concentracion": "500mg",
+    "Tipo": "Tableta"
+  },
+  {
+    "id": 6,
+    "Medicamento": "Metformina",
+    "Concentracion": "850mg",
+    "Tipo": "Tableta"
+  },
+  {
+    "id": 7,
+    "Medicamento": "Simvastatina",
+    "Concentracion": "20mg",
+    "Tipo": "Tableta"
+  },
+  {
+    "id": 8,
+    "Medicamento": "Losartán",
+    "Concentracion": "50mg",
+    "Tipo": "Tableta"
+  },
+  {
+    "id": 9,
+    "Medicamento": "Aspirina",
+    "Concentracion": "100mg",
+    "Tipo": "Tableta"
+  },
+  {
+    "id": 10,
+    "Medicamento": "Levotiroxina",
+    "Concentracion": "75mcg",
+    "Tipo": "Tableta"
+  },
+  {
+    "id": 11,
+    "Medicamento": "Atorvastatina",
+    "Concentracion": "10mg",
+    "Tipo": "Tableta"
+  },
+  {
+    "id": 12,
+    "Medicamento": "Alprazolam",
+    "Concentracion": "0.5mg",
+    "Tipo": "Tableta"
+  },
+  {
+    "id": 13,
+    "Medicamento": "Clopidogrel",
+    "Concentracion": "75mg",
+    "Tipo": "Tableta"
+  },
+  {
+    "id": 14,
+    "Medicamento": "Furosemida",
+    "Concentracion": "40mg",
+    "Tipo": "Tableta"
+  },
+  {
+    "id": 15,
+    "Medicamento": "Ciprofloxacino",
+    "Concentracion": "500mg",
+    "Tipo": "Cápsula"
+  }
+]
