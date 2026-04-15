@@ -1,39 +1,51 @@
-import BottomNavigation from '@mui/material/BottomNavigation'
-import BottomNavigationAction from '@mui/material/BottomNavigationAction'
-import DescriptionIcon from '@mui/icons-material/Description'
-import AssignamentIconTurnedIn from '@mui/icons-material/AssignmentTurnedIn'
-import ReceiptIcon from '@mui/icons-material/Receipt'
-import { useState } from 'react'
+import { useEffect } from 'react'
+import { BottomNavigation, BottomNavigationAction, Paper } from '@mui/material'
+import { Inventory, AssignmentTurnedIn, Assignment } from '@mui/icons-material'
+import { Link, useLocation } from 'react-router-dom'
+import useNavigationStore from '../context/UseNavigationStore'
 
 function BotNav() {
-  const [value, setValue] = useState('recents')
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue)
-  }
+  const { activeTab, setActiveTab } = useNavigationStore()
+  const location = useLocation()
+  useEffect(() => {
+    const path = location.pathname
+    if (path === '/inventario') setActiveTab(0)
+    if (path === '/usuarios') setActiveTab(1)
+    if (path === '/solicitudes') setActiveTab(2)
+  }, [location, setActiveTab])
 
   return (
-    <BottomNavigation
-      sx={{ width: '100%' }}
-      value={value}
-      onChange={handleChange}
+    <Paper
+      sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }}
+      elevation={3}
     >
-      <BottomNavigationAction
-        label='Inventario'
-        value='inventario'
-        icon={<DescriptionIcon />}
-      />
-      <BottomNavigationAction
-        label='Pedidos'
-        value='pedidos'
-        icon={<AssignamentIconTurnedIn />}
-      />
-      <BottomNavigationAction
-        label='Registros'
-        value='registros'
-        icon={<ReceiptIcon />}
-      />
-    </BottomNavigation>
+      <BottomNavigation
+        showLabels
+        value={activeTab}
+        onChange={(event, newValue) => {
+          setActiveTab(newValue)
+        }}
+      >
+        <BottomNavigationAction
+          label='Inventario'
+          icon={<Inventory />}
+          component={Link}
+          to='/inventario'
+        />
+        <BottomNavigationAction
+          label='Pedidos'
+          icon={<AssignmentTurnedIn />}
+          component={Link}
+          to='/pedidos'
+        />
+        <BottomNavigationAction
+          label='Registros'
+          icon={<Assignment />}
+          component={Link}
+          to='/registros'
+        />
+      </BottomNavigation>
+    </Paper>
   )
 }
 

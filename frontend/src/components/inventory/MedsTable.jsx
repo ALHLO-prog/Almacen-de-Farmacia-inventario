@@ -3,8 +3,29 @@ import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
 import { DataGrid } from '@mui/x-data-grid'
 import tablas from '../../JSON/tablas.json'
+import { useState } from 'react'
+import TextField from '@mui/material/TextField'
+
+function CustomToolbar({ buscarMed, setBuscarMed }) {
+  return (
+    <Box sx={{ p: 1 }}>
+      <TextField
+        fullWidth
+        size='small'
+        variant='outlined'
+        placeholder='Buscar medicamento.'
+        value={buscarMed}
+        onChange={(e) => setBuscarMed(e.target.value)}
+      />
+    </Box>
+  )
+}
 
 function MedsTable() {
+  const [buscarMed, setBuscarMed] = useState('')
+  const filasFiltradas = tablas.filter((fila) =>
+    fila.Medicamento.toLowerCase().includes(buscarMed.toLowerCase())
+  )
   const colums = [
     {
       field: 'Medicamento',
@@ -12,15 +33,17 @@ function MedsTable() {
       minWidth: 130,
       flex: 1,
       resizable: false,
-      editable: false
+      editable: false,
+      disableColumnMenu: true
     },
     {
       field: 'Concentracion',
-      headerName: 'Concentración',
+      headerName: '%',
       minWidth: 130,
       flex: 1,
       resizable: false,
-      editable: false
+      editable: false,
+      disableColumnMenu: true
     },
     {
       field: 'Tipo',
@@ -33,7 +56,6 @@ function MedsTable() {
       type: 'singleSelect'
     }
   ]
-
   return (
     <Box
       sx={{
@@ -48,14 +70,20 @@ function MedsTable() {
         }}
       >
         <Button size='small'>Agregar medicamento</Button>
+        <CustomToolbar buscarMed={buscarMed} setBuscarMed={setBuscarMed} />
       </Stack>
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         <DataGrid
           columns={colums}
-          rows={tablas}
+          rows={filasFiltradas}
           hideFooterPagination={true}
           pagination={false}
           hideFooter
+          initialState={{
+            sorting: {
+              sortModel: [{ field: 'Medicamento', sort: 'asc' }]
+            }
+          }}
           slotProps={{
             panel: {
               sx: {
