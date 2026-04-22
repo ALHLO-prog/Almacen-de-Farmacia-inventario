@@ -1,0 +1,74 @@
+[
+  {
+    "id": 1,
+    "medicamento": "Ibuprofeno",
+    "lote": "B67890",
+    "cantidad": 50,
+    "fecha_pedido": "2026-01-05",
+    "estado": "Pendiente"
+  },
+  {
+    "id": 2,
+    "medicamento": "Paracetamol",
+    "lote": "A12345",
+    "cantidad": 100,
+    "fecha_pedido": "2026-01-06",
+    "estado": "Pendiente"
+  },
+  {
+    "id": 3,
+    "medicamento": "Amoxicilina",
+    "lote": "C54321",
+    "cantidad": 30,
+    "fecha_pedido": "2026-01-07",
+    "estado": "Pendiente"
+  },
+  {
+    "id": 4,
+    "medicamento": "Omeprazol",
+    "lote": "D98765",
+    "cantidad": 20,
+    "fecha_pedido": "2026-01-08",
+    "estado": "Pendiente"
+  },
+  {
+    "id": 5,
+    "medicamento": "Metformina",
+    "lote": "E24680",
+    "cantidad": 40,
+    "fecha_pedido": "2026-01-09",
+    "estado": "Pendiente"
+  },
+  {
+    "id": 6,
+    "medicamento": "Simvastatina",
+    "lote": "F13579",
+    "cantidad": 25,
+    "fecha_pedido": "2026-01-10",
+    "estado": "Pendiente"
+  },
+  {
+    "id": 7,
+    "medicamento": "Losartán",
+    "lote": "G24680",
+    "cantidad": 15,
+    "fecha_pedido": "2026-01-11",
+    "estado": "Pendiente"
+  },
+  {
+    "id": 8,
+    "medicamento": "Aspirina",
+    "lote": "H98765",
+    "cantidad": 60,
+    "fecha_pedido": "2026-01-12",
+    "estado": "Pendiente"
+  },
+  {
+    "id": 9,
+    "medicamento": "Metoprolol",
+    "lote": "I54321",
+    "cantidad": 20,
+    "fecha_pedido": "2026-01-13",
+    "estado": "Pendiente"
+  }
+]

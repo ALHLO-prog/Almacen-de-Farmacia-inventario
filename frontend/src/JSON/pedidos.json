@@ -1,0 +1,66 @@
+[
+  {
+    "id": 9,
+    "medicamento": "Levotiroxina",
+    "lote": "I54321",
+    "cantidad": 10,
+    "fecha_pedido": "2026-01-13",
+    "estado": "Completado"
+  },
+  {
+    "id": 10,
+    "medicamento": "Hidrocortisona",
+    "lote": "J67890",
+    "cantidad": 5,
+    "fecha_pedido": "2026-01-14",
+    "estado": "Completado"
+  },
+  {
+    "id": 11,
+    "medicamento": "Atorvastatina",
+    "lote": "K12345",
+    "cantidad": 35,
+    "fecha_pedido": "2026-01-15",
+    "estado": "Completado"
+  },
+  {
+    "id": 12,
+    "medicamento": "Alprazolam",
+    "lote": "L54321",
+    "cantidad": 20,
+    "fecha_pedido": "2026-01-16",
+    "estado": "Completado"
+  },
+  {
+    "id": 13,
+    "medicamento": "Clopidogrel",
+    "lote": "M98765",
+    "cantidad": 45,
+    "fecha_pedido": "2026-01-17",
+    "estado": "Completado"
+  },
+  {
+    "id": 14,
+    "medicamento": "Ciprofloxacino",
+    "lote": "N24680",
+    "cantidad": 25,
+    "fecha_pedido": "2026-01-18",
+    "estado": "Completado"
+  },
+  {
+    "id": 15,
+    "medicamento": "Dexametasona",
+    "lote": "O13579",
+    "cantidad": 10,
+    "fecha_pedido": "2026-01-19",
+    "estado": "Completado"
+  },
+  {
+    "id": 16,
+    "medicamento": "Furosemida",
+    "lote": "P24680",
+    "cantidad": 30,
+    "fecha_pedido": "2026-01-20",
+    "estado": "Completado"
+  }
+]

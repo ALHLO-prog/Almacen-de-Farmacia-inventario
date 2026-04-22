@@ -1,8 +1,10 @@
 import { Route, Routes, Navigate } from 'react-router-dom'
 import './App.css'
 import BotNav from './components/BotNav.jsx'
-import { Paper } from '@mui/material'
-import Inventory from './components/inventory/Inventory.jsx'
+import { Box, Paper } from '@mui/material'
+import Inventario from './components/inventario/Inventory.jsx'
+import Registros from './components/registros/Registros.jsx'
+import Pedidos from './components/pedidos/pedidos.jsx'
 import Nav from './components/Nav.jsx'
 import { Fade } from '@mui/material'
 import useUser from './context/useUser.jsx'
@@ -15,21 +17,41 @@ function App() {
       <header className='flex-none'>
         <Nav />
       </header>
-      <main className='grow overflow-hidden relative'>
-        <div className='absolute inset-0 overflow-y-auto px-2'>
+      <Box
+        sx={{
+          display: 'flex',
+          flexGrow: 1,
+          overflow: 'hidden',
+          position: 'relative'
+        }}
+      >
+        <Box
+          sx={{
+            position: 'absolute',
+            inset: 0,
+            overflowY: 'auto',
+            px: 1,
+            pb: 10
+          }}
+        >
           <Routes>
             {user.ci ? (
               <Route index element={<Navigate to='/inventario' />} />
             ) : (
-              <Route path='/registrate' element={<Navigate to='/inventario' />} />
+              <Route
+                path='/signIn'
+                element={<Navigate to='/signIn' />}
+              />
             )}
+            <Route path='/signIn' element={<SignIn />} />
+            <Route path='/logIn' element={<SignIn />} />
             <Route index element={<Navigate to='/inventario' />} />
             <Route
               path='/inventario'
               element={
                 <Fade in timeout={500}>
                   <div>
-                    <Inventory />{' '}
+                    <Inventario />{' '}
                   </div>
                 </Fade>
               }
@@ -39,7 +61,7 @@ function App() {
               element={
                 <Fade in timeout={500}>
                   <div>
-                    <Inventory />
+                    <Pedidos />
                   </div>
                 </Fade>
               }
@@ -49,14 +71,14 @@ function App() {
               element={
                 <Fade in timeout={500}>
                   <div>
-                    <Inventory />
+                    <Registros />
                   </div>
                 </Fade>
               }
             />
           </Routes>
-        </div>
-      </main>
+        </Box>
+      </Box>
 
       <footer className='flex-none'>
         <Paper
