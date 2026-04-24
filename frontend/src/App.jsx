@@ -53,11 +53,9 @@ function App() {
               path='/inventario'
               element={
                 user.isRegistered ? (
-                  <Fade in timeout={500}>
-                    <div>
-                      <Inventario />{' '}
-                    </div>
-                  </Fade>
+                  <div>
+                    <Inventario />
+                  </div>
                 ) : (
                   <Navigate to='/registrate' replace />
                 )
@@ -67,11 +65,9 @@ function App() {
               path='/pedidos'
               element={
                 user.isRegistered ? (
-                  <Fade in timeout={500}>
-                    <div>
-                      <Pedidos />
-                    </div>
-                  </Fade>
+                  <div>
+                    <Pedidos />
+                  </div>
                 ) : (
                   <Navigate to='/registrate' replace />
                 )
@@ -81,11 +77,9 @@ function App() {
               path='/registros'
               element={
                 user.isRegistered ? (
-                  <Fade in timeout={500}>
-                    <div>
-                      <Registros />
-                    </div>
-                  </Fade>
+                  <div>
+                    <Registros />
+                  </div>
                 ) : (
                   <Navigate to='/registrate' replace />
                 )

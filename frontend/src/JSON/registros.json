@@ -1,0 +1,84 @@
+[
+  {
+    "id": 1,
+    "medicamento": "Paracetamol",
+    "lote": "L001",
+    "entrada": 0,
+    "salida": 100,
+    "fecha_pedido": "2023-10-01",
+    "nota": "Pedido de farmacia"
+  },
+  {
+    "id": 2,
+    "medicamento": "Ibuprofeno",
+    "lote": "L002",
+    "entrada": 0,
+    "salida": 50,
+    "fecha_pedido": "2023-10-02"
+  },
+  {
+    "id": 3,
+    "medicamento": "Amoxicilina",
+    "lote": "L003",
+    "entrada": 50,
+    "salida": 0,
+    "fecha_pedido": "2023-10-03"
+  },
+  {
+    "id": 4,
+    "medicamento": "Loratadina",
+    "lote": "L004",
+    "entrada": 0,
+    "salida": 20,
+    "fecha_pedido": "2023-10-04"
+  },
+  {
+    "id": 5,
+    "medicamento": "Metformina",
+    "lote": "L005",
+    "entrada": 0,
+    "salida": 40,
+    "fecha_pedido": "2023-10-05"
+  },
+  {
+    "id": 6,
+    "medicamento": "Omeprazol",
+    "lote": "L006",
+    "entrada": 40,
+    "salida": 0,
+    "fecha_pedido": "2023-10-06",
+    "nota": "Hospital de Juan Griego"
+  },
+  {
+    "id": 7,
+    "medicamento": "Simvastatina",
+    "lote": "L007",
+    "entrada": 0,
+    "salida": 15,
+    "fecha_pedido": "2023-10-07"
+  },
+  {
+    "id": 8,
+    "medicamento": "Aspirina",
+    "lote": "L008",
+    "entrada": 0,
+    "salida": 60,
+    "fecha_pedido": "2023-10-08"
+  },
+  {
+    "id": 9,
+    "medicamento": "Ciprofloxacino",
+    "lote": "L009",
+    "entrada": 100,
+    "salida": 0,
+    "fecha_pedido": "2023-10-09"
+  },
+  {
+    "id": 10,
+    "medicamento": "Dexametasona",
+    "lote": "L010",
+    "entrada": 0,
+    "salida": 10,
+    "fecha_pedido": "2023-10-10"
+  }
+]
