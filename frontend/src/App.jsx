@@ -8,6 +8,8 @@ import Pedidos from './components/pedidos/pedidos.jsx'
 import Nav from './components/Nav.jsx'
 import { Fade } from '@mui/material'
 import useUser from './context/useUser.jsx'
+import SignUp from './components/log/signup.jsx'
+import SignIn from './components/log/signin.jsx'
 
 function App() {
   const { user } = useUser()
@@ -35,65 +37,82 @@ function App() {
           }}
         >
           <Routes>
-            {user.ci ? (
-              <Route index element={<Navigate to='/inventario' />} />
-            ) : (
-              <Route
-                path='/signIn'
-                element={<Navigate to='/signIn' />}
-              />
-            )}
-            <Route path='/signIn' element={<SignIn />} />
-            <Route path='/logIn' element={<SignIn />} />
-            <Route index element={<Navigate to='/inventario' />} />
+            <Route
+              index
+              element={
+                user.isRegistered ? (
+                  <Navigate to='/inventario' replace />
+                ) : (
+                  <Navigate to='/registrate' replace />
+                )
+              }
+            />
+            <Route path='/registrate' element={<SignUp />} />
+            <Route path='/iniciasesion' element={<SignIn />} />
             <Route
               path='/inventario'
               element={
-                <Fade in timeout={500}>
-                  <div>
-                    <Inventario />{' '}
-                  </div>
-                </Fade>
+                user.isRegistered ? (
+                  <Fade in timeout={500}>
+                    <div>
+                      <Inventario />{' '}
+                    </div>
+                  </Fade>
+                ) : (
+                  <Navigate to='/registrate' replace />
+                )
               }
             />
             <Route
               path='/pedidos'
               element={
-                <Fade in timeout={500}>
-                  <div>
-                    <Pedidos />
-                  </div>
-                </Fade>
+                user.isRegistered ? (
+                  <Fade in timeout={500}>
+                    <div>
+                      <Pedidos />
+                    </div>
+                  </Fade>
+                ) : (
+                  <Navigate to='/registrate' replace />
+                )
               }
             />
             <Route
               path='/registros'
               element={
-                <Fade in timeout={500}>
-                  <div>
-                    <Registros />
-                  </div>
-                </Fade>
+                user.isRegistered ? (
+                  <Fade in timeout={500}>
+                    <div>
+                      <Registros />
+                    </div>
+                  </Fade>
+                ) : (
+                  <Navigate to='/registrate' replace />
+                )
               }
             />
           </Routes>
         </Box>
       </Box>
 
-      <footer className='flex-none'>
-        <Paper
-          elevation={3}
-          sx={{
-            position: 'fixed',
-            bottom: 0,
-            left: 0,
-            right: 0,
-            zIndex: 1000
-          }}
-        >
-          <BotNav />
-        </Paper>
-      </footer>
+      {user.isRegistered ? (
+        <footer className='flex-none'>
+          <Paper
+            elevation={3}
+            sx={{
+              position: 'fixed',
+              bottom: 0,
+              left: 0,
+              right: 0,
+              zIndex: 1000
+            }}
+          >
+            <BotNav />
+          </Paper>
+        </footer>
+      ) : (
+        <div></div>
+      )}
     </div>
   )
 }

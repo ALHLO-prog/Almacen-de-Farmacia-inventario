@@ -12,9 +12,13 @@ function Nav() {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position='static'>
         <Toolbar>
-          <Button color='inherit' startIcon={<AccountCircleIcon />}>
-            {user.name || 'Invitado'}
-          </Button>
+          {user.isRegistered ? (
+            <Button color='inherit' startIcon={<AccountCircleIcon />}>
+              {user.name}
+            </Button>
+          ) : (
+            <h2>Inventario de Farmacia HLO</h2>
+          )}
         </Toolbar>
       </AppBar>
     </Box>

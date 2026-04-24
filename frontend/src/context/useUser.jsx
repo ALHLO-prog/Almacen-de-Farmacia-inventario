@@ -4,7 +4,8 @@ const useUser = create((set) => ({
   user: {
     ci: undefined,
     name: undefined,
-    cargo: undefined
+    cargo: undefined,
+    isRegistered: true
   },
   setUser: (newUser) => set({ user: newUser })
 }))
