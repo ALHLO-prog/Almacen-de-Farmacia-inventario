@@ -10,6 +10,8 @@ import { useState } from 'react'
 import TextField from '@mui/material/TextField'
 import tablas from '../../JSON/tablas.json'
 import lotes from '../../JSON/lotes.json'
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers'
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 
 function CustomToolbar({ buscarMed, setBuscarMed }) {
   return (
@@ -25,15 +27,21 @@ function CustomToolbar({ buscarMed, setBuscarMed }) {
     </Box>
   )
 }
-
 function MedsTable() {
   const [open, setOpen] = useState(false)
+  const [openLote, setOpenLote] = useState(false)
   const [selectedRow, setSelectedRow] = useState(null)
+
+  const createLote = () => {
+    // Aquí iría la lógica para crear un nuevo lote, como abrir un formulario o enviar una solicitud al backend
+    console.log('Crear nuevo lote para el medicamento:', selectedRow)
+  }
   const handleRowClick = (params) => {
     setSelectedRow(params.row)
     setOpen(true)
   }
   const handleClose = () => setOpen(false)
+  const handleLoteDialog = () => setOpenLote(!openLote)
   const [buscarMed, setBuscarMed] = useState('')
   const filasFiltradas = tablas.filter((fila) =>
     fila.Medicamento.toLowerCase().includes(buscarMed.toLowerCase())
@@ -186,8 +194,50 @@ function MedsTable() {
             </>
           )}
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color='primary'>
+        <DialogActions sx={{ justifyContent: 'space-between', px: 2, py: 2 }}>
+          <Button variant='outlined' onClick={handleLoteDialog}>
+            Agregar lote
+          </Button>
+          <Button variant='outlined' onClick={handleClose} color='primary'>
+            Cerrar
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog
+        open={openLote}
+        onClose={handleLoteDialog}
+        fullWidth
+        maxWidth='xs'
+      >
+        <DialogTitle>Agregar lote</DialogTitle>
+        <DialogContent dividers>
+          <TextField
+            required
+            label='Lote'
+            variant='outlined'
+            fullWidth
+            margin='normal'
+          />
+
+          <DatePicker
+            label='Fecha de Vencimiento'
+            slotProps={{ textField: { fullWidth: true } }}
+          />
+
+          <TextField
+            required
+            label='Cantidad'
+            variant='outlined'
+            fullWidth
+            margin='normal'
+            type='number'
+          />
+        </DialogContent>
+        <DialogActions sx={{ justifyContent: 'space-between', px: 2, py: 2 }}>
+          <Button variant='outlined' onClick={createLote}>
+            Crear
+          </Button>
+          <Button variant='outlined' onClick={handleLoteDialog} color='primary'>
             Cerrar
           </Button>
         </DialogActions>
