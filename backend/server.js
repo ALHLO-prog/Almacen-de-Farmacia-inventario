@@ -7,17 +7,19 @@ import pedidosRoutes from './routes/pedidos.js'
 import registrosRoutes from './routes/registros.js'
 import { createServer } from 'http'
 import { Server } from 'socket.io'
+import cors from 'cors'
 
 const app = express()
 const httpServer = createServer(app)
 
 const io = new Server(httpServer, {
   cors: {
-    origin: '*', //colocar la URL del front en produccion
+    origin: 'http://localhost:5173', //colocar la URL del front en produccion
     methods: ['GET', 'POST']
   }
 })
 
+app.use(cors({ origin: 'http://localhost:5173' }))
 app.use(express.json())
 app.use((req, res, next) => {
   req.io = io

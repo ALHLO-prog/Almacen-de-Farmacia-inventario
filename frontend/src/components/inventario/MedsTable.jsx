@@ -8,10 +8,11 @@ import Stack from '@mui/material/Stack'
 import { DataGrid } from '@mui/x-data-grid'
 import { useState } from 'react'
 import TextField from '@mui/material/TextField'
-import tablas from '../../JSON/tablas.json'
 import lotes from '../../JSON/lotes.json'
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import { useMedQuery } from '../../Queries/medQuery'
+import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
 
 function CustomToolbar({ buscarMed, setBuscarMed }) {
   return (
@@ -28,27 +29,44 @@ function CustomToolbar({ buscarMed, setBuscarMed }) {
   )
 }
 function MedsTable() {
+  const {
+    data: meds,
+    isLoading: medIsLoading,
+    isError: medIsError,
+    error: medError
+  } = useMedQuery()
   const [open, setOpen] = useState(false)
   const [openLote, setOpenLote] = useState(false)
   const [selectedRow, setSelectedRow] = useState(null)
+  const [openMed, setOpenMed] = useState(false)
+  const [type, setType] = useState('')
+
+  const handleTypeOnChange = (event) => {
+    setType(event.target.value)
+  }
 
   const createLote = () => {
-    // Aquí iría la lógica para crear un nuevo lote, como abrir un formulario o enviar una solicitud al backend
     console.log('Crear nuevo lote para el medicamento:', selectedRow)
   }
+
   const handleRowClick = (params) => {
     setSelectedRow(params.row)
     setOpen(true)
   }
   const handleClose = () => setOpen(false)
   const handleLoteDialog = () => setOpenLote(!openLote)
+  const handleMed = () => setOpenMed(!openMed)
+
   const [buscarMed, setBuscarMed] = useState('')
-  const filasFiltradas = tablas.filter((fila) =>
-    fila.Medicamento.toLowerCase().includes(buscarMed.toLowerCase())
-  )
+  const filasFiltradas = !medIsLoading
+    ? meds.filter((fila) =>
+        fila.nombre.toLowerCase().includes(buscarMed.toLowerCase())
+      )
+    : meds
+
   const colums = [
     {
-      field: 'Medicamento',
+      field: 'nombre',
       headerName: 'Medicamento',
       minWidth: 130,
       flex: 1,
@@ -57,17 +75,7 @@ function MedsTable() {
       disableColumnMenu: true
     },
     {
-      field: 'Concentracion',
-      headerName: '%',
-      minWidth: 130,
-      flex: 1,
-      resizable: false,
-      editable: false,
-      disableColumnMenu: true,
-      sortable: false
-    },
-    {
-      field: 'Tipo',
+      field: 'tipo',
       headerName: 'Tipo',
       minWidth: 130,
       flex: 1,
@@ -124,7 +132,9 @@ function MedsTable() {
             mb: 1
           }}
         >
-          <Button size='small'>Agregar medicamento</Button>
+          <Button size='small' onClick={handleMed}>
+            Agregar medicamento
+          </Button>
           <CustomToolbar buscarMed={buscarMed} setBuscarMed={setBuscarMed} />
         </Stack>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -156,6 +166,45 @@ function MedsTable() {
           />
         </div>
       </Box>
+      <Dialog open={openMed} onClose={handleMed} fullWidth maxWidth='xs'>
+        <DialogTitle>Agregar lote</DialogTitle>
+        <DialogContent dividers>
+          <TextField
+            fullWidth
+            label='Nombre'
+            variant='outlined'
+            margin='normal'
+          />
+          <FormControl fullWidth>
+            <InputLabel id='label-med'>Presentación</InputLabel>
+            <Select
+              labelId='label-med'
+              id='selec-med'
+              variant='outlined'
+              value={type}
+              onChange={handleTypeOnChange}
+              label='Presentación'
+            >
+              <MenuItem value='Ampolla'>Ampolla</MenuItem>
+              <MenuItem value='Solución'>Solución</MenuItem>
+              <MenuItem value='Tableta'>Tableta</MenuItem>
+              <MenuItem value='Suspensión'>Suspensión</MenuItem>
+              <MenuItem value='Jarabe'>Jarabe</MenuItem>
+              <MenuItem value='Gota'>Gota</MenuItem>
+              <MenuItem value='Crema'>Crema</MenuItem>
+            </Select>
+          </FormControl>
+        </DialogContent>
+        <DialogActions sx={{ justifyContent: 'space-between', px: 2, py: 2 }}>
+          <Button variant='outlined' onClick={createLote}>
+            Crear
+          </Button>
+          <Button variant='outlined' onClick={handleMed} color='primary'>
+            Cerrar
+          </Button>
+        </DialogActions>
+      </Dialog>
+
       <Dialog open={open} onClose={handleClose} fullWidth maxWidth='xs'>
         <DialogTitle>Lotes</DialogTitle>
         <DialogContent dividers>
