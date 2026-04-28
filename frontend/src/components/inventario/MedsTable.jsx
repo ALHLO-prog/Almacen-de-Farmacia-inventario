@@ -32,18 +32,16 @@ function MedsTable() {
   const {
     data: meds,
     isLoading: medIsLoading,
-    isError: medIsError,
-    error: medError
+    isMedError,
+    medError,
+    mutate: createNewMed,
+    isNewMedError,
+    newMedError
   } = useMedQuery()
   const [open, setOpen] = useState(false)
   const [openLote, setOpenLote] = useState(false)
   const [selectedRow, setSelectedRow] = useState(null)
   const [openMed, setOpenMed] = useState(false)
-  const [type, setType] = useState('')
-
-  const handleTypeOnChange = (event) => {
-    setType(event.target.value)
-  }
 
   const createLote = () => {
     console.log('Crear nuevo lote para el medicamento:', selectedRow)
@@ -166,45 +164,12 @@ function MedsTable() {
           />
         </div>
       </Box>
-      <Dialog open={openMed} onClose={handleMed} fullWidth maxWidth='xs'>
-        <DialogTitle>Agregar lote</DialogTitle>
-        <DialogContent dividers>
-          <TextField
-            fullWidth
-            label='Nombre'
-            variant='outlined'
-            margin='normal'
-          />
-          <FormControl fullWidth>
-            <InputLabel id='label-med'>Presentación</InputLabel>
-            <Select
-              labelId='label-med'
-              id='selec-med'
-              variant='outlined'
-              value={type}
-              onChange={handleTypeOnChange}
-              label='Presentación'
-            >
-              <MenuItem value='Ampolla'>Ampolla</MenuItem>
-              <MenuItem value='Solución'>Solución</MenuItem>
-              <MenuItem value='Tableta'>Tableta</MenuItem>
-              <MenuItem value='Suspensión'>Suspensión</MenuItem>
-              <MenuItem value='Jarabe'>Jarabe</MenuItem>
-              <MenuItem value='Gota'>Gota</MenuItem>
-              <MenuItem value='Crema'>Crema</MenuItem>
-            </Select>
-          </FormControl>
-        </DialogContent>
-        <DialogActions sx={{ justifyContent: 'space-between', px: 2, py: 2 }}>
-          <Button variant='outlined' onClick={createLote}>
-            Crear
-          </Button>
-          <Button variant='outlined' onClick={handleMed} color='primary'>
-            Cerrar
-          </Button>
-        </DialogActions>
-      </Dialog>
 
+      <CreateMedDialog
+        handleMed={handleMed}
+        createNewMed={createNewMed}
+        openMed={openMed}
+      />
       <Dialog open={open} onClose={handleClose} fullWidth maxWidth='xs'>
         <DialogTitle>Lotes</DialogTitle>
         <DialogContent dividers>
@@ -292,6 +257,70 @@ function MedsTable() {
         </DialogActions>
       </Dialog>
     </>
+  )
+}
+
+const CreateMedDialog = ({ handleMed, openMed, createNewMed }) => {
+  const handleNewMed = () => {
+    if (newMedInfo.nombre.length == 0 || newMedInfo.tipo.length == 0) {
+    } else {
+      createNewMed(newMedInfo)
+    }
+  }
+  const [newMedInfo, setNewMedInfo] = useState({
+    nombre: '',
+    tipo: ''
+  })
+
+  const handleChange = (e) => {
+    const { name, value } = e.target
+    setNewMedInfo({
+      ...newMedInfo,
+      [name]: value ? value[0].toUpperCase() + value.slice(1) : ''
+    })
+  }
+  return (
+    <Dialog open={openMed} onClose={handleMed} fullWidth maxWidth='xs'>
+      <DialogTitle>Agregar medicamento</DialogTitle>
+      <DialogContent dividers>
+        <TextField
+          fullWidth
+          onChange={handleChange}
+          name='nombre'
+          label='Nombre'
+          variant='outlined'
+          margin='normal'
+        />
+        <FormControl fullWidth>
+          <InputLabel id='label-med'>Presentación</InputLabel>
+          <Select
+            labelId='label-med'
+            id='selec-med'
+            variant='outlined'
+            name='tipo'
+            value={newMedInfo.tipo}
+            onChange={handleChange}
+            label='Presentación'
+          >
+            <MenuItem value='Ampolla'>Ampolla</MenuItem>
+            <MenuItem value='Solución'>Solución</MenuItem>
+            <MenuItem value='Tableta'>Tableta</MenuItem>
+            <MenuItem value='Suspensión'>Suspensión</MenuItem>
+            <MenuItem value='Jarabe'>Jarabe</MenuItem>
+            <MenuItem value='Gota'>Gota</MenuItem>
+            <MenuItem value='Crema'>Crema</MenuItem>
+          </Select>
+        </FormControl>
+      </DialogContent>
+      <DialogActions sx={{ justifyContent: 'space-between', px: 2, py: 2 }}>
+        <Button variant='outlined' onClick={handleNewMed}>
+          Crear
+        </Button>
+        <Button variant='outlined' onClick={handleMed} color='primary'>
+          Cerrar
+        </Button>
+      </DialogActions>
+    </Dialog>
   )
 }
 
