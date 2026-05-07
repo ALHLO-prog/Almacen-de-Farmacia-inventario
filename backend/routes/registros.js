@@ -117,4 +117,34 @@ router.post('/movimiento-directo', async (req, res) => {
   }
 })
 
+router.get('/', async (req, res) => {
+  try {
+    const registros = await db('registros')
+      .join('medicamentos', 'registros.medicamento_id', '=', 'medicamentos.id') // 2da imagen
+      .join('lotes', 'registros.lote_id', '=', 'lotes.id')
+      .join('usuarios', 'registros.usuario_id', '=', 'usuarios.ci')
+      .select(
+        'registros.id',
+        'registros.fecha',
+        'registros.entrada',
+        'registros.salida',
+        'registros.nota',
+        'medicamentos.nombre as medicamento_nombre', // Tomas el nombre del medicamento
+        'medicamentos.tipo',
+        'lotes.codigo as codigo_lote',
+        'usuarios.nombre as nombre_usuario' // Tomas el nombre del usuario
+      )
+      .orderBy('registros.fecha', 'desc')
+    res.status(200).json(registros)
+  } catch (e) {
+    console.error('Error al obtener registros:', e)
+    res
+      .status(500)
+      .json({
+        error: 'No se pudieron obtener los registros',
+        detalle: e.message
+      })
+  }
+})
+
 export default router

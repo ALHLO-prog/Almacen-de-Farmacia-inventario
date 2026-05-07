@@ -3,10 +3,10 @@ import Stack from '@mui/material/Stack'
 import { DataGrid } from '@mui/x-data-grid'
 import pedidos from '../../JSON/pedidos.json'
 
-function CompletadoTabla() {
+function CompletadoTabla({ data, isLoading, isError, error }) {
   const columns = [
     {
-      field: 'medicamento',
+      field: 'nombre_medicamento',
       headerName: 'Medicamento',
       width: 150,
       resizable: false,
@@ -14,7 +14,7 @@ function CompletadoTabla() {
       disableColumnMenu: true
     },
     {
-      field: 'lote',
+      field: 'codigo_lote',
       headerName: 'Lote',
       width: 150,
       resizable: false,
@@ -32,7 +32,7 @@ function CompletadoTabla() {
       sortable: false
     },
     {
-      field: 'fecha_pedido',
+      field: 'fecha',
       headerName: 'Fecha de Pedido',
       width: 150,
       resizable: false,
@@ -47,7 +47,9 @@ function CompletadoTabla() {
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         <DataGrid
           columns={columns}
-          rows={pedidos}
+          rows={data}
+          loading={isLoading}
+          error={isError ? error : null}
           hideFooterPagination={true}
           pagination={false}
           hideFooter

@@ -3,10 +3,10 @@ import Stack from '@mui/material/Stack'
 import { DataGrid } from '@mui/x-data-grid'
 import pedidos from '../../JSON/pendientes.json'
 
-function PendienteTabla() {
+function PendienteTabla({ data, isLoading, isError, error }) {
   const columns = [
     {
-      field: 'medicamento',
+      field: 'nombre_medicamento',
       headerName: 'Medicamento',
       width: 150,
       resizable: false,
@@ -14,7 +14,7 @@ function PendienteTabla() {
       disableColumnMenu: true
     },
     {
-      field: 'lote',
+      field: 'codigo_lote',
       headerName: 'Lote',
       width: 150,
       resizable: false,
@@ -32,7 +32,7 @@ function PendienteTabla() {
       sortable: false
     },
     {
-      field: 'fecha_pedido',
+      field: 'fecha',
       headerName: 'Fecha de Pedido',
       width: 150,
       resizable: false,
@@ -40,14 +40,14 @@ function PendienteTabla() {
       disableColumnMenu: true
     }
   ]
-
+  console.log('Datos de pendientes:', data)
   return (
     <Box sx={{ width: '100%' }}>
       <Stack direction='row' spacing={1} sx={{ mb: 1 }}></Stack>
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         <DataGrid
           columns={columns}
-          rows={pedidos}
+          rows={data}
           hideFooterPagination={true}
           pagination={false}
           hideFooter

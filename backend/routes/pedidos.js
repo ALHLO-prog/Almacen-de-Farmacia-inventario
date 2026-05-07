@@ -13,10 +13,15 @@ router.get('/por-fecha', async (req, res) => {
       .join('medicamentos', 'pedidos.medicamento_id', '=', 'medicamentos.id')
       // Unimos con usuarios (usando la columna 'ci' que vimos en tu esquema)
       .join('usuarios', 'pedidos.usuario_id', '=', 'usuarios.ci')
+      .join('lotes', 'pedidos.lote_id', '=', 'lotes.id')
       .select(
-        'pedidos.*',
+        'pedidos.id',
+        'pedidos.fecha',
+        'pedidos.cantidad',
+        'pedidos.estado',
         'medicamentos.nombre as nombre_medicamento',
-        'usuarios.nombre as nombre_usuario'
+        'usuarios.nombre as nombre_usuario',
+        'lotes.codigo as codigo_lote'
       )
       .orderBy('pedidos.fecha', 'desc')
 

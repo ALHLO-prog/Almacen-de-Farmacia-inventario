@@ -1,11 +1,12 @@
 import { Box, Stack, Typography } from '@mui/material'
 import { DataGrid } from '@mui/x-data-grid'
-import registros from '../../JSON/registros.json'
+import { useRegQuery } from '../../Queries/regQuery'
 
 function Registros() {
+  const { data, isLoading, isError, error } = useRegQuery()
   const columns = [
     {
-      field: 'medicamento',
+      field: 'medicamento_nombre',
       headerName: 'Medicamento',
       width: 150,
       resizable: false,
@@ -13,7 +14,7 @@ function Registros() {
       disableColumnMenu: true
     },
     {
-      field: 'lote',
+      field: 'codigo_lote',
       headerName: 'Lote',
       width: 150,
       resizable: false,
@@ -56,7 +57,7 @@ function Registros() {
       }
     },
     {
-      field: 'fecha_pedido',
+      field: 'fecha',
       headerName: 'Fecha',
       width: 100,
       resizable: false,
@@ -81,10 +82,20 @@ function Registros() {
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           <DataGrid
             columns={columns}
-            rows={registros}
+            rows={data}
+            loading={isLoading}
+            error={isError ? error : null}
             hideFooterPagination={true}
             pagination={false}
             hideFooter
+            initialState={{
+              pagination: {
+                paginationModel: {
+                  pageSize: 10, // Cuántas filas ver por defecto
+                  page: 0 // Página inicial
+                }
+              }
+            }}
           />
         </div>
       </Box>

@@ -28,7 +28,7 @@ export const useMedQuery = () => {
     isError: isMedError,
     error: medError
   } = useQuery({
-    queryKey: ['id'],
+    queryKey: ['medicamentos'],
     queryFn: fetchMeds
   })
 

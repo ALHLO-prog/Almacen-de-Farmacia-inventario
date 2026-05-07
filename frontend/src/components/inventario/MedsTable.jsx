@@ -56,9 +56,12 @@ function MedsTable() {
   const handleMed = () => setOpenMed(!openMed)
 
   const [buscarMed, setBuscarMed] = useState('')
+
   const filasFiltradas = !medIsLoading
     ? meds.filter((fila) =>
-        fila.nombre.toLowerCase().includes(buscarMed.toLowerCase())
+        fila.nombre
+          ? fila.nombre.toLowerCase().includes(buscarMed.toLowerCase())
+          : false
       )
     : meds
 
@@ -139,14 +142,21 @@ function MedsTable() {
           <DataGrid
             columns={colums}
             rows={filasFiltradas}
-            hideFooterPagination={true}
-            pagination={false}
-            hideFooter
+            loading={medIsLoading}
+            error={isMedError ? medError : null}
+            pagination={true}
             initialState={{
               sorting: {
                 sortModel: [{ field: 'Medicamento', sort: 'asc' }]
+              },
+              pagination: {
+                paginationModel: {
+                  pageSize: 10, // Cuántas filas ver por defecto
+                  page: 0 // Página inicial
+                }
               }
             }}
+            pageSizeOptions={[5, 10, 20, 50]}
             slotProps={{
               panel: {
                 sx: {
@@ -170,6 +180,13 @@ function MedsTable() {
         createNewMed={createNewMed}
         openMed={openMed}
       />
+    </>
+  )
+}
+
+const LoteDialog = ({ handleLoteDialog, openLote, createLote }) => {
+  return (
+    <>
       <Dialog open={open} onClose={handleClose} fullWidth maxWidth='xs'>
         <DialogTitle>Lotes</DialogTitle>
         <DialogContent dividers>
@@ -178,14 +195,14 @@ function MedsTable() {
               <DataGrid
                 columns={columsLotes}
                 rows={lotes}
-                hideFooterPagination={true}
-                pagination={false}
-                hideFooter
+                pagination={true}
                 initialState={{
                   sorting: {
                     sortModel: [{ field: 'fecha_de_vencimiento', sort: 'asc' }]
                   }
                 }}
+                hideFooterPagination={true}
+                hideFooter
                 slotProps={{
                   panel: {
                     sx: {
