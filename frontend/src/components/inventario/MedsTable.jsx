@@ -12,7 +12,14 @@ import { useLoteQuery } from '../../Queries/lotQuery'
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { useMedQuery } from '../../Queries/medQuery'
-import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
+import {
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  InputAdornment,
+  FormHelperText
+} from '@mui/material'
 
 function CustomToolbar({ buscarMed, setBuscarMed }) {
   return (
@@ -159,16 +166,17 @@ const LoteDialog = ({ selectedRow, handleClose, open }) => {
   } = useLoteQuery(selectedRow?.id)
   const [lotesRow, setLotesRow] = useState(null)
   const [openLoteMenu, setOpenLoteMenu] = useState(false)
+  const [openLote, setOpenLote] = useState(false)
+  const [concentrationUnit, setConcentrationUnit] = useState('')
   const handleRowLotesClick = (params) => {
     console.log('Lote seleccionado:', params.row)
     setLotesRow(params.row)
     setOpenLoteMenu(true)
   }
-  const [openLote, setOpenLote] = useState(false)
   const handleLoteDialog = () => setOpenLote(false)
   const handleLoteDialogOpen = () => setOpenLote(true)
   const createLote = () => {
-    console.log('Crear nuevo lote para el medicamento:', selectedRow)
+    newloteInfo 
   }
   const formatDate = (dateString) => {
     const date = new Date(dateString)
@@ -222,6 +230,21 @@ const LoteDialog = ({ selectedRow, handleClose, open }) => {
       sortable: false
     }
   ]
+  const [newLoteInfo, setNewLoteInfo] = useState({
+    medicamento_id: selectedRow?.id,
+    codigo: '',
+    cantidad: '',
+    vencimiento: '',
+    concentracion: ''
+  })
+  const handleChange = (e) => {
+    const { name, value } = e.target
+    setNewLoteInfo({
+      ...newLoteInfo,
+      [name]: value ? value[0].toUpperCase() + value.slice(1) : ''
+    })
+  }
+
   return (
     <>
       <Dialog open={open} onClose={handleClose} fullWidth maxWidth='xs'>
@@ -286,28 +309,72 @@ const LoteDialog = ({ selectedRow, handleClose, open }) => {
         maxWidth='xs'
       >
         <DialogTitle>Agregar lote</DialogTitle>
-        <DialogContent dividers>
+        <DialogContent dividers className='flex flex-col gap-2'>
           <TextField
             required
+            name='codigo'
             label='Lote'
             variant='outlined'
             fullWidth
-            margin='normal'
+            onChange={handleChange}
           />
-
           <DatePicker
+            required
+            name='vencimiento'
+            onChange={(date) =>
+              setNewLoteInfo({
+                ...newLoteInfo,
+                vencimiento: date
+              })
+            }
             label='Fecha de Vencimiento'
             slotProps={{ textField: { fullWidth: true } }}
           />
-
           <TextField
             required
+            name='cantidad'
             label='Cantidad'
             variant='outlined'
             fullWidth
-            margin='normal'
             type='number'
+            onChange={handleChange}
           />
+          <div className='flex gap-2'>
+            <FormControl>
+              <TextField required variant='outlined' fullWidth type='number' />
+              <FormHelperText>%</FormHelperText>
+            </FormControl>
+            <FormControl fullWidth>
+              <InputLabel>Unidad</InputLabel>
+              <Select
+                required
+                value={concentrationUnit}
+                label='Age'
+                onChange={(e) => setConcentrationUnit(e.target.value)}
+              >
+                <MenuItem value={'mg'}>mg</MenuItem>
+                <MenuItem value={'gr'}>gr</MenuItem>
+                <MenuItem value={'%'}>%</MenuItem>
+                <MenuItem value={'UI'}>UI</MenuItem>
+                <MenuItem value={'mEq'}>mEq</MenuItem>
+              </Select>
+            </FormControl>
+            <FormControl>
+              <TextField
+                variant='outlined'
+                fullWidth
+                type='number'
+                slotProps={{
+                  input: {
+                    endAdornment: (
+                      <InputAdornment position='end'>ml</InputAdornment>
+                    )
+                  }
+                }}
+              />
+              <FormHelperText>Volumen</FormHelperText>
+            </FormControl>
+          </div>
         </DialogContent>
         <DialogActions sx={{ justifyContent: 'space-between', px: 2, py: 2 }}>
           <Button variant='outlined' onClick={createLote}>
