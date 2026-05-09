@@ -8,7 +8,7 @@ import Stack from '@mui/material/Stack'
 import { DataGrid } from '@mui/x-data-grid'
 import { useState } from 'react'
 import TextField from '@mui/material/TextField'
-import lotes from '../../JSON/lotes.json'
+import { useLoteQuery } from '../../Queries/lotQuery'
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { useMedQuery } from '../../Queries/medQuery'
@@ -39,20 +39,13 @@ function MedsTable() {
     newMedError
   } = useMedQuery()
   const [open, setOpen] = useState(false)
-  const [openLote, setOpenLote] = useState(false)
   const [selectedRow, setSelectedRow] = useState(null)
   const [openMed, setOpenMed] = useState(false)
-
-  const createLote = () => {
-    console.log('Crear nuevo lote para el medicamento:', selectedRow)
-  }
-
   const handleRowClick = (params) => {
     setSelectedRow(params.row)
     setOpen(true)
   }
   const handleClose = () => setOpen(false)
-  const handleLoteDialog = () => setOpenLote(!openLote)
   const handleMed = () => setOpenMed(!openMed)
 
   const [buscarMed, setBuscarMed] = useState('')
@@ -84,38 +77,6 @@ function MedsTable() {
       editable: false,
       valueOptions: ['Tableta', 'Ampolla', 'Jarabe', 'Crema', 'Cápsula'],
       type: 'singleSelect'
-    }
-  ]
-  const columsLotes = [
-    {
-      field: 'lote',
-      headerName: 'Lote',
-      minWidth: 90,
-      flex: 1,
-      resizable: false,
-      editable: false,
-      disableColumnMenu: true,
-      sortable: false
-    },
-    {
-      field: 'fecha_de_vencimiento',
-      headerName: 'F.V',
-      minWidth: 90,
-      flex: 1,
-      resizable: false,
-      editable: false,
-      disableColumnMenu: true,
-      sortable: false
-    },
-    {
-      field: 'cantidad',
-      headerName: 'Cantidad',
-      minWidth: 90,
-      flex: 1,
-      resizable: false,
-      editable: false,
-      disableColumnMenu: true,
-      sortable: false
     }
   ]
 
@@ -180,11 +141,87 @@ function MedsTable() {
         createNewMed={createNewMed}
         openMed={openMed}
       />
+      <LoteDialog
+        selectedRow={selectedRow}
+        handleClose={handleClose}
+        open={open}
+      />
     </>
   )
 }
 
-const LoteDialog = ({ handleLoteDialog, openLote, createLote }) => {
+const LoteDialog = ({ selectedRow, handleClose, open }) => {
+  const {
+    data: lotes,
+    isLoading,
+    isError,
+    error
+  } = useLoteQuery(selectedRow?.id)
+  const [lotesRow, setLotesRow] = useState(null)
+  const [openLoteMenu, setOpenLoteMenu] = useState(false)
+  const handleRowLotesClick = (params) => {
+    console.log('Lote seleccionado:', params.row)
+    setLotesRow(params.row)
+    setOpenLoteMenu(true)
+  }
+  const [openLote, setOpenLote] = useState(false)
+  const handleLoteDialog = () => setOpenLote(false)
+  const handleLoteDialogOpen = () => setOpenLote(true)
+  const createLote = () => {
+    console.log('Crear nuevo lote para el medicamento:', selectedRow)
+  }
+  const formatDate = (dateString) => {
+    const date = new Date(dateString)
+    if (isNaN(date.getTime())) {
+      return ''
+    }
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const day = String(date.getDate()).padStart(2, '0')
+    return `${year}-${month}-${day}`
+  }
+  const columsLotes = [
+    {
+      field: 'codigo',
+      headerName: 'Lote',
+      minWidth: 90,
+      flex: 1,
+      resizable: false,
+      editable: false,
+      disableColumnMenu: true,
+      sortable: false
+    },
+    {
+      field: 'vencimiento',
+      headerName: 'F.V',
+      minWidth: 90,
+      flex: 1,
+      resizable: false,
+      editable: false,
+      disableColumnMenu: true,
+      sortable: false
+    },
+    {
+      field: 'concentracion',
+      headerName: 'Concentración',
+      minWidth: 90,
+      flex: 1,
+      resizable: false,
+      editable: false,
+      disableColumnMenu: true,
+      sortable: false
+    },
+    {
+      field: 'cantidad',
+      headerName: 'Cantidad',
+      minWidth: 90,
+      flex: 1,
+      resizable: false,
+      editable: false,
+      disableColumnMenu: true,
+      sortable: false
+    }
+  ]
   return (
     <>
       <Dialog open={open} onClose={handleClose} fullWidth maxWidth='xs'>
@@ -196,6 +233,8 @@ const LoteDialog = ({ handleLoteDialog, openLote, createLote }) => {
                 columns={columsLotes}
                 rows={lotes}
                 pagination={true}
+                loading={isLoading}
+                error={isError ? error : null}
                 initialState={{
                   sorting: {
                     sortModel: [{ field: 'fecha_de_vencimiento', sort: 'asc' }]
@@ -219,14 +258,14 @@ const LoteDialog = ({ handleLoteDialog, openLote, createLote }) => {
                     }
                   }
                 }}
-                onRowClick={handleRowClick}
+                onRowClick={handleRowLotesClick}
                 sx={{ cursor: 'pointer' }}
               />
             </>
           )}
         </DialogContent>
         <DialogActions sx={{ justifyContent: 'space-between', px: 2, py: 2 }}>
-          <Button variant='outlined' onClick={handleLoteDialog}>
+          <Button variant='outlined' onClick={handleLoteDialogOpen}>
             Agregar lote
           </Button>
           <Button variant='outlined' onClick={handleClose} color='primary'>
@@ -234,6 +273,12 @@ const LoteDialog = ({ handleLoteDialog, openLote, createLote }) => {
           </Button>
         </DialogActions>
       </Dialog>
+
+      <Dialog open={openLoteMenu} onClose={() => setOpenLoteMenu(false)}>
+        <DialogTitle>{`${selectedRow?.nombre} - ${lotesRow?.codigo}`}</DialogTitle>
+        <DialogContent dividers></DialogContent>
+      </Dialog>
+
       <Dialog
         open={openLote}
         onClose={handleLoteDialog}
