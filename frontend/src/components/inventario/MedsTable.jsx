@@ -18,7 +18,12 @@ import {
   MenuItem,
   Select,
   InputAdornment,
-  FormHelperText
+  FormHelperText,
+  Card,
+  Typography,
+  Divider,
+  Grid,
+  Container
 } from '@mui/material'
 
 function CustomToolbar({ buscarMed, setBuscarMed }) {
@@ -176,7 +181,7 @@ const LoteDialog = ({ selectedRow, handleClose, open }) => {
   const handleLoteDialog = () => setOpenLote(false)
   const handleLoteDialogOpen = () => setOpenLote(true)
   const createLote = () => {
-    newloteInfo 
+    newloteInfo
   }
   const formatDate = (dateString) => {
     const date = new Date(dateString)
@@ -299,7 +304,78 @@ const LoteDialog = ({ selectedRow, handleClose, open }) => {
 
       <Dialog open={openLoteMenu} onClose={() => setOpenLoteMenu(false)}>
         <DialogTitle>{`${selectedRow?.nombre} - ${lotesRow?.codigo}`}</DialogTitle>
-        <DialogContent dividers></DialogContent>
+        <DialogContent dividers>
+          <Card variant='outlined' sx={{ maxWidth: 360 }}>
+            <Box sx={{ py: 1, px: 2 }}>
+              <Stack
+                direction='row'
+                sx={{ justifyContent: 'space-between', alignItems: 'center' }}
+              >
+                <Typography gutterBottom variant='p' component='div'>
+                  Cantidad
+                </Typography>
+                <Typography gutterBottom variant='p' component='div'>
+                  {lotesRow?.cantidad}
+                </Typography>
+              </Stack>
+            </Box>
+            <Divider />
+            <Box sx={{ p: 1, px: 2 }}>
+              <Stack
+                direction='row'
+                sx={{ justifyContent: 'space-between', alignItems: 'center' }}
+              >
+                <Typography gutterBottom variant='p' component='div'>
+                  Concentración
+                </Typography>
+                <Typography gutterBottom variant='p' component='div'>
+                  {lotesRow?.concentracion}
+                </Typography>
+              </Stack>
+            </Box>
+            <Divider />
+            <Box sx={{ p: 1, px: 2 }}>
+              <Stack
+                direction='row'
+                sx={{ justifyContent: 'space-between', alignItems: 'center' }}
+              >
+                <Typography gutterBottom variant='p' component='div'>
+                  Fecha de vencimiento
+                </Typography>
+                <Typography gutterBottom variant='p' component='div'>
+                  {new Date(lotesRow?.vencimiento).toLocaleDateString('es-ES', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit'
+                  })}
+                </Typography>
+              </Stack>
+            </Box>
+          </Card>
+          <Container
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              mt: 2,
+              gap: 2,
+              flexDirection: 'column',
+              alignItems: 'center'
+            }}
+          >
+            <Box sx={{ display: 'flex', gap: 2, width: '100%' }}>
+              <TextField label='Entrada' fullWidth />
+              <TextField label='Salida' fullWidth />
+            </Box>
+          </Container>
+        </DialogContent>
+        <DialogActions sx={{ justifyContent: 'space-between', px: 2, py: 2 }}>
+          <Button variant='outlined' color='error' sx={{ mr: 1 }}>
+            Cerrar
+          </Button>
+          <Button variant='outlined' color='primary'>
+            Modificar cantidad
+          </Button>
+        </DialogActions>
       </Dialog>
 
       <Dialog
