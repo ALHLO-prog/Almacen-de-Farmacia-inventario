@@ -8,18 +8,6 @@ const fetchLotes = async (medId) => {
   return response.json()
 }
 
-const createNewMed = async (newMedData) => {
-  const response = await fetch(URL_BASE + '/med/add', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json' // Indispensable para que el backend lea el body
-    },
-    body: JSON.stringify(newMedData)
-  })
-  if (!response.ok) throw new Error('Hubo un error al crear el medicamento')
-  return response.json()
-}
-
 const createNewLote = async (newLoteData) => {
   const response = await fetch(URL_BASE + '/lote/add', {
     method: 'POST',
@@ -41,16 +29,17 @@ export const useLoteQuery = (medId) => {
   })
 
   const {
-    mutate,
-    isError: isNewLoteError,
-    error: newLoteError,
-    isPending
-  } = useMutation({
-    mutationFn: (newLoteData) => createNewLote(newLoteData),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['lotes', medId] })
-    }
-  })
+      mutate,
+      isError: isNewLoteError,
+      error: newLoteError,
+      isPending
+    } = useMutation({
+      mutationFn: (newLoteData) => createNewLote(newLoteData),
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ['lotes', medId] })
+      }
+    })
+
 
   return {
     data,

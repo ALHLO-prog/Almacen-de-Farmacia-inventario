@@ -14,7 +14,6 @@ router.get('/med/:id', async (req, res) => {
     const lotes = await db('lotes')
       .where('medicamento_id', id)
       .orderBy('vencimiento', 'asc')
-    // Los que vencen pronto primero
     res.json(lotes)
   } catch (e) {
     res
@@ -24,9 +23,7 @@ router.get('/med/:id', async (req, res) => {
 })
 router.post('/add', async (req, res) => {
   try {
-    const { medicamento_id, codigo, concentracion, cantidad } = req.body
-    let vencimiento = req.body.vencimiento
-
+    const { medicamento_id, codigo, concentracion, cantidad, vencimiento } = req.body
     if (vencimiento && vencimiento.length === 7) vencimiento += '-01'
 
     const [id] = await db('lotes').insert({
@@ -55,9 +52,8 @@ router.post('/add', async (req, res) => {
   router.put('/update-stock/:loteId', async (req, res) => {
     try {
       const { loteId } = req.params
-      const { cambio } = req.body // Ejemplo: 10 para sumar, -5 para restar
+      const { cambio } = req.body 
 
-      // Usamos .increment de Knex que es más seguro para concurrencia
       await db('lotes').where('id', loteId).increment('cantidad', cambio)
 
       const loteActualizado = await db('lotes').where('id', loteId).first()

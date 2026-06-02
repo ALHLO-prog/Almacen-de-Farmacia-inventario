@@ -167,8 +167,14 @@ const LoteDialog = ({ selectedRow, handleClose, open }) => {
     data: lotes,
     isLoading,
     isError,
-    error
+    error,
+    mutate: createNewLote,
+    isNewLoteError,
+    newLoteError,
+    isPending
   } = useLoteQuery(selectedRow?.id)
+  const [openLoteMenu, setOpenLoteMenu] = useState(false)
+
   const [lotesRow, setLotesRow] = useState(null)
   const handleRowLotesClick = (params) => {
     console.log('Lote seleccionado:', params.row)
@@ -231,9 +237,6 @@ const LoteDialog = ({ selectedRow, handleClose, open }) => {
       sortable: false
     }
   ]
-
-
-
   return (
     <>
       <Dialog open={open} onClose={handleClose} fullWidth maxWidth='xs'>
@@ -285,21 +288,17 @@ const LoteDialog = ({ selectedRow, handleClose, open }) => {
           </Button>
         </DialogActions>
       </Dialog>
-      <CreateLote selectedRow={selectedRow} openLote={openLote} setOpenLote={setOpenLote}S />
+      <CreateLote selectedRow={selectedRow} openLote={openLote} setOpenLote={setOpenLote} createNewLote={createNewLote} isNewLoteError={isNewLoteError} newLoteError={newLoteError} />
       <ViewLote selectedRow={selectedRow} lotesRow={lotesRow} />
     </>
   )
 }
 
-
-
-const CreateLote = ({ selectedRow, openLote, setOpenLote }) => {
-
+const CreateLote = ({ selectedRow, openLote, setOpenLote, createNewLote, isNewLoteError, newLoteError }) => {
   const handleLoteDialog = () => setOpenLote(false)
   const [concentrationUnit, setConcentrationUnit] = useState('')
-
   const [newLoteInfo, setNewLoteInfo] = useState({
-    medicamento_id: selectedRow?.id,
+    medicamento_id: selectedRow.id,
     codigo: '',
     cantidad: '',
     vencimiento: '',
@@ -314,7 +313,12 @@ const CreateLote = ({ selectedRow, openLote, setOpenLote }) => {
       ...newLoteInfo,
       concentracion: newLoteInfo.concentracion.V.length > 0 && newLoteInfo.concentracion.V != '0' ? `${newLoteInfo.concentracion.C + newLoteInfo.concentracion.U}/${newLoteInfo.concentracion.V}ml` : `${newLoteInfo.concentracion.C + newLoteInfo.concentracion.U}`
     }
-    console.log(loteInfoToServer);
+    if (newLoteInfo.codigo.length == 0 || newLoteInfo.cantidad.length == 0) {
+      console.log('Faltan campos obligatorios')
+    } else {
+      createNewLote(loteInfoToServer)
+      console.log(loteInfoToServer);
+    }
   }
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -347,7 +351,7 @@ const CreateLote = ({ selectedRow, openLote, setOpenLote }) => {
             onChange={(date) =>
               setNewLoteInfo({
                 ...newLoteInfo,
-                vencimiento: `${date.$y}-${date.$M + 1}-${date.$D}`
+                vencimiento: `${date.$y}-${date.$M.length === 1 ? '0' + (date.$M + 1) : date.$M + 1}-${date.$D}`
               })
             }
             label='Fecha de Vencimiento'
@@ -438,7 +442,6 @@ const CreateLote = ({ selectedRow, openLote, setOpenLote }) => {
 }
 
 const ViewLote = ({ selectedRow, lotesRow }) => {
-  const [openLoteMenu, setOpenLoteMenu] = useState(false)
 
   return (
     <Dialog open={openLoteMenu} onClose={() => setOpenLoteMenu(false)}>
