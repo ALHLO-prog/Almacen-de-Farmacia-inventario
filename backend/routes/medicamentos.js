@@ -6,6 +6,7 @@ const router = express.Router()
 // OBTENER TODOS LOS MEDICAMENTOS
 
 router.get('/', async (req, res) => {
+  console.log('hi')
   try {
     const medicamentos = await db('medicamentos').select('*')
     res.json(medicamentos)

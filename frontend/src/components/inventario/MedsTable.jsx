@@ -64,10 +64,10 @@ function MedsTable() {
 
   const filasFiltradas = !medIsLoading
     ? meds.filter((fila) =>
-        fila.nombre
-          ? fila.nombre.toLowerCase().includes(buscarMed.toLowerCase())
-          : false
-      )
+      fila.nombre
+        ? fila.nombre.toLowerCase().includes(buscarMed.toLowerCase())
+        : false
+    )
     : meds
 
   const colums = [
@@ -170,19 +170,15 @@ const LoteDialog = ({ selectedRow, handleClose, open }) => {
     error
   } = useLoteQuery(selectedRow?.id)
   const [lotesRow, setLotesRow] = useState(null)
-  const [openLoteMenu, setOpenLoteMenu] = useState(false)
-  const [openLote, setOpenLote] = useState(false)
-  const [concentrationUnit, setConcentrationUnit] = useState('')
   const handleRowLotesClick = (params) => {
     console.log('Lote seleccionado:', params.row)
     setLotesRow(params.row)
     setOpenLoteMenu(true)
   }
-  const handleLoteDialog = () => setOpenLote(false)
   const handleLoteDialogOpen = () => setOpenLote(true)
-  const createLote = () => {
-    newloteInfo
-  }
+  const [openLote, setOpenLote] = useState(false)
+
+
   const formatDate = (dateString) => {
     const date = new Date(dateString)
     if (isNaN(date.getTime())) {
@@ -235,20 +231,8 @@ const LoteDialog = ({ selectedRow, handleClose, open }) => {
       sortable: false
     }
   ]
-  const [newLoteInfo, setNewLoteInfo] = useState({
-    medicamento_id: selectedRow?.id,
-    codigo: '',
-    cantidad: '',
-    vencimiento: '',
-    concentracion: ''
-  })
-  const handleChange = (e) => {
-    const { name, value } = e.target
-    setNewLoteInfo({
-      ...newLoteInfo,
-      [name]: value ? value[0].toUpperCase() + value.slice(1) : ''
-    })
-  }
+
+
 
   return (
     <>
@@ -301,83 +285,46 @@ const LoteDialog = ({ selectedRow, handleClose, open }) => {
           </Button>
         </DialogActions>
       </Dialog>
+      <CreateLote selectedRow={selectedRow} openLote={openLote} setOpenLote={setOpenLote}S />
+      <ViewLote selectedRow={selectedRow} lotesRow={lotesRow} />
+    </>
+  )
+}
 
-      <Dialog open={openLoteMenu} onClose={() => setOpenLoteMenu(false)}>
-        <DialogTitle>{`${selectedRow?.nombre} - ${lotesRow?.codigo}`}</DialogTitle>
-        <DialogContent dividers>
-          <Card variant='outlined' sx={{ maxWidth: 360 }}>
-            <Box sx={{ py: 1, px: 2 }}>
-              <Stack
-                direction='row'
-                sx={{ justifyContent: 'space-between', alignItems: 'center' }}
-              >
-                <Typography gutterBottom variant='p' component='div'>
-                  Cantidad
-                </Typography>
-                <Typography gutterBottom variant='p' component='div'>
-                  {lotesRow?.cantidad}
-                </Typography>
-              </Stack>
-            </Box>
-            <Divider />
-            <Box sx={{ p: 1, px: 2 }}>
-              <Stack
-                direction='row'
-                sx={{ justifyContent: 'space-between', alignItems: 'center' }}
-              >
-                <Typography gutterBottom variant='p' component='div'>
-                  Concentración
-                </Typography>
-                <Typography gutterBottom variant='p' component='div'>
-                  {lotesRow?.concentracion}
-                </Typography>
-              </Stack>
-            </Box>
-            <Divider />
-            <Box sx={{ p: 1, px: 2 }}>
-              <Stack
-                direction='row'
-                sx={{ justifyContent: 'space-between', alignItems: 'center' }}
-              >
-                <Typography gutterBottom variant='p' component='div'>
-                  Fecha de vencimiento
-                </Typography>
-                <Typography gutterBottom variant='p' component='div'>
-                  {new Date(lotesRow?.vencimiento).toLocaleDateString('es-ES', {
-                    year: 'numeric',
-                    month: '2-digit',
-                    day: '2-digit'
-                  })}
-                </Typography>
-              </Stack>
-            </Box>
-          </Card>
-          <Container
-            sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              mt: 2,
-              gap: 2,
-              flexDirection: 'column',
-              alignItems: 'center'
-            }}
-          >
-            <Box sx={{ display: 'flex', gap: 2, width: '100%' }}>
-              <TextField label='Entrada' fullWidth />
-              <TextField label='Salida' fullWidth />
-            </Box>
-          </Container>
-        </DialogContent>
-        <DialogActions sx={{ justifyContent: 'space-between', px: 2, py: 2 }}>
-          <Button variant='outlined' color='error' sx={{ mr: 1 }}>
-            Cerrar
-          </Button>
-          <Button variant='outlined' color='primary'>
-            Modificar cantidad
-          </Button>
-        </DialogActions>
-      </Dialog>
 
+
+const CreateLote = ({ selectedRow, openLote, setOpenLote }) => {
+
+  const handleLoteDialog = () => setOpenLote(false)
+  const [concentrationUnit, setConcentrationUnit] = useState('')
+
+  const [newLoteInfo, setNewLoteInfo] = useState({
+    medicamento_id: selectedRow?.id,
+    codigo: '',
+    cantidad: '',
+    vencimiento: '',
+    concentracion: {
+      C: '',
+      U: '',
+      V: '',
+    }
+  })
+  const createLote = () => {
+    const loteInfoToServer = {
+      ...newLoteInfo,
+      concentracion: newLoteInfo.concentracion.V.length > 0 && newLoteInfo.concentracion.V != '0' ? `${newLoteInfo.concentracion.C + newLoteInfo.concentracion.U}/${newLoteInfo.concentracion.V}ml` : `${newLoteInfo.concentracion.C + newLoteInfo.concentracion.U}`
+    }
+    console.log(loteInfoToServer);
+  }
+  const handleChange = (e) => {
+    const { name, value } = e.target
+    setNewLoteInfo({
+      ...newLoteInfo,
+      [name]: value ? value[0].toUpperCase() + value.slice(1) : ''
+    })
+  }
+  return (
+    <>
       <Dialog
         open={openLote}
         onClose={handleLoteDialog}
@@ -400,7 +347,7 @@ const LoteDialog = ({ selectedRow, handleClose, open }) => {
             onChange={(date) =>
               setNewLoteInfo({
                 ...newLoteInfo,
-                vencimiento: date
+                vencimiento: `${date.$y}-${date.$M + 1}-${date.$D}`
               })
             }
             label='Fecha de Vencimiento'
@@ -417,7 +364,15 @@ const LoteDialog = ({ selectedRow, handleClose, open }) => {
           />
           <div className='flex gap-2'>
             <FormControl>
-              <TextField required variant='outlined' fullWidth type='number' />
+              <TextField required variant='outlined' fullWidth type='number' onChange={(e) => {
+                const { value } = e.target
+                setNewLoteInfo({
+                  ...newLoteInfo,
+                  concentracion: { ...newLoteInfo.concentracion, C: value }
+                }
+                )
+              }
+              } />
               <FormHelperText>%</FormHelperText>
             </FormControl>
             <FormControl fullWidth>
@@ -425,8 +380,16 @@ const LoteDialog = ({ selectedRow, handleClose, open }) => {
               <Select
                 required
                 value={concentrationUnit}
-                label='Age'
-                onChange={(e) => setConcentrationUnit(e.target.value)}
+                label='Unit'
+                onChange={(e) => {
+                  const { value } = e.target
+                  setConcentrationUnit(value)
+                  setNewLoteInfo({
+                    ...newLoteInfo,
+                    concentracion: { ...newLoteInfo.concentracion, U: value }
+                  }
+                  )
+                }}
               >
                 <MenuItem value={'mg'}>mg</MenuItem>
                 <MenuItem value={'gr'}>gr</MenuItem>
@@ -440,6 +403,15 @@ const LoteDialog = ({ selectedRow, handleClose, open }) => {
                 variant='outlined'
                 fullWidth
                 type='number'
+                onChange={(e) => {
+                  const { value } = e.target
+                  setNewLoteInfo({
+                    ...newLoteInfo,
+                    concentracion: { ...newLoteInfo.concentracion, V: value }
+                  }
+                  )
+                }
+                }
                 slotProps={{
                   input: {
                     endAdornment: (
@@ -462,6 +434,88 @@ const LoteDialog = ({ selectedRow, handleClose, open }) => {
         </DialogActions>
       </Dialog>
     </>
+  )
+}
+
+const ViewLote = ({ selectedRow, lotesRow }) => {
+  const [openLoteMenu, setOpenLoteMenu] = useState(false)
+
+  return (
+    <Dialog open={openLoteMenu} onClose={() => setOpenLoteMenu(false)}>
+      <DialogTitle>{`${selectedRow?.nombre} - ${lotesRow?.codigo}`}</DialogTitle>
+      <DialogContent dividers>
+        <Card variant='outlined' sx={{ maxWidth: 360 }}>
+          <Box sx={{ py: 1, px: 2 }}>
+            <Stack
+              direction='row'
+              sx={{ justifyContent: 'space-between', alignItems: 'center' }}
+            >
+              <Typography gutterBottom variant='p' component='div'>
+                Cantidad
+              </Typography>
+              <Typography gutterBottom variant='p' component='div'>
+                {lotesRow?.cantidad}
+              </Typography>
+            </Stack>
+          </Box>
+          <Divider />
+          <Box sx={{ p: 1, px: 2 }}>
+            <Stack
+              direction='row'
+              sx={{ justifyContent: 'space-between', alignItems: 'center' }}
+            >
+              <Typography gutterBottom variant='p' component='div'>
+                Concentración
+              </Typography>
+              <Typography gutterBottom variant='p' component='div'>
+                {lotesRow?.concentracion}
+              </Typography>
+            </Stack>
+          </Box>
+          <Divider />
+          <Box sx={{ p: 1, px: 2 }}>
+            <Stack
+              direction='row'
+              sx={{ justifyContent: 'space-between', alignItems: 'center' }}
+            >
+              <Typography gutterBottom variant='p' component='div'>
+                Fecha de vencimiento
+              </Typography>
+              <Typography gutterBottom variant='p' component='div'>
+                {new Date(lotesRow?.vencimiento).toLocaleDateString('es-ES', {
+                  year: 'numeric',
+                  month: '2-digit',
+                  day: '2-digit'
+                })}
+              </Typography>
+            </Stack>
+          </Box>
+        </Card>
+        <Container
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            mt: 2,
+            gap: 2,
+            flexDirection: 'column',
+            alignItems: 'center'
+          }}
+        >
+          <Box sx={{ display: 'flex', gap: 2, width: '100%' }}>
+            <TextField label='Entrada' fullWidth />
+            <TextField label='Salida' fullWidth />
+          </Box>
+        </Container>
+      </DialogContent>
+      <DialogActions sx={{ justifyContent: 'space-between', px: 2, py: 2 }}>
+        <Button variant='outlined' color='error' sx={{ mr: 1 }}>
+          Cerrar
+        </Button>
+        <Button variant='outlined' color='primary'>
+          Modificar cantidad
+        </Button>
+      </DialogActions>
+    </Dialog>
   )
 }
 
