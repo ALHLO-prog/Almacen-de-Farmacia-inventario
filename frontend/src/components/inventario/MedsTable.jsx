@@ -87,7 +87,7 @@ function MedsTable() {
       flex: 1,
       resizable: false,
       editable: false,
-      valueOptions: ['Tableta', 'Ampolla', 'Jarabe', 'Crema', 'Cápsula'],
+      valueOptions: ['Tableta', 'Ampolla', 'Jarabe', 'Crema', 'Cápsula', 'Suspensión', 'Gota', 'Solución'],
       type: 'singleSelect'
     }
   ]
@@ -124,8 +124,8 @@ function MedsTable() {
               },
               pagination: {
                 paginationModel: {
-                  pageSize: 10, // Cuántas filas ver por defecto
-                  page: 0 // Página inicial
+                  pageSize: 10, 
+                  page: 0 
                 }
               }
             }}
@@ -283,13 +283,13 @@ const LoteDialog = ({ selectedRow, handleClose, open }) => {
           <Button variant='outlined' onClick={handleLoteDialogOpen}>
             Agregar lote
           </Button>
-          <Button variant='outlined' onClick={handleClose} color='primary'>
+          <Button variant='outlined' onClick={handleClose} color='error'>
             Cerrar
           </Button>
         </DialogActions>
       </Dialog>
       <CreateLote selectedRow={selectedRow} openLote={openLote} setOpenLote={setOpenLote} createNewLote={createNewLote} isNewLoteError={isNewLoteError} newLoteError={newLoteError} />
-      <ViewLote selectedRow={selectedRow} lotesRow={lotesRow} />
+      <ViewLote selectedRow={selectedRow} lotesRow={lotesRow} openLoteMenu={openLoteMenu} setOpenLoteMenu={setOpenLoteMenu} />
     </>
   )
 }
@@ -298,7 +298,6 @@ const CreateLote = ({ selectedRow, openLote, setOpenLote, createNewLote, isNewLo
   const handleLoteDialog = () => setOpenLote(false)
   const [concentrationUnit, setConcentrationUnit] = useState('')
   const [newLoteInfo, setNewLoteInfo] = useState({
-    medicamento_id: selectedRow.id,
     codigo: '',
     cantidad: '',
     vencimiento: '',
@@ -311,6 +310,7 @@ const CreateLote = ({ selectedRow, openLote, setOpenLote, createNewLote, isNewLo
   const createLote = () => {
     const loteInfoToServer = {
       ...newLoteInfo,
+      medicamento_id: selectedRow.id,
       concentracion: newLoteInfo.concentracion.V.length > 0 && newLoteInfo.concentracion.V != '0' ? `${newLoteInfo.concentracion.C + newLoteInfo.concentracion.U}/${newLoteInfo.concentracion.V}ml` : `${newLoteInfo.concentracion.C + newLoteInfo.concentracion.U}`
     }
     if (newLoteInfo.codigo.length == 0 || newLoteInfo.cantidad.length == 0) {
@@ -432,7 +432,7 @@ const CreateLote = ({ selectedRow, openLote, setOpenLote, createNewLote, isNewLo
           <Button variant='outlined' onClick={createLote}>
             Crear
           </Button>
-          <Button variant='outlined' onClick={handleLoteDialog} color='primary'>
+          <Button variant='outlined' onClick={handleLoteDialog} color='error'>
             Cerrar
           </Button>
         </DialogActions>
@@ -441,7 +441,7 @@ const CreateLote = ({ selectedRow, openLote, setOpenLote, createNewLote, isNewLo
   )
 }
 
-const ViewLote = ({ selectedRow, lotesRow }) => {
+const ViewLote = ({ selectedRow, lotesRow, openLoteMenu, setOpenLoteMenu }) => {
 
   return (
     <Dialog open={openLoteMenu} onClose={() => setOpenLoteMenu(false)}>
@@ -511,11 +511,11 @@ const ViewLote = ({ selectedRow, lotesRow }) => {
         </Container>
       </DialogContent>
       <DialogActions sx={{ justifyContent: 'space-between', px: 2, py: 2 }}>
-        <Button variant='outlined' color='error' sx={{ mr: 1 }}>
-          Cerrar
-        </Button>
         <Button variant='outlined' color='primary'>
-          Modificar cantidad
+          Modificar
+        </Button>
+        <Button variant='outlined' color='error' sx={{ mr: 1 }} onClick={() => setOpenLoteMenu(false)}>
+          Cerrar
         </Button>
       </DialogActions>
     </Dialog>
@@ -571,6 +571,7 @@ const CreateMedDialog = ({ handleMed, openMed, createNewMed }) => {
             <MenuItem value='Jarabe'>Jarabe</MenuItem>
             <MenuItem value='Gota'>Gota</MenuItem>
             <MenuItem value='Crema'>Crema</MenuItem>
+            <MenuItem value='Cápsula'>Cápsula</MenuItem>
           </Select>
         </FormControl>
       </DialogContent>
