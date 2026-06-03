@@ -25,6 +25,7 @@ import {
   Grid,
   Container
 } from '@mui/material'
+import { useUI } from '../../context/UI'
 
 function CustomToolbar({ buscarMed, setBuscarMed }) {
   return (
@@ -163,6 +164,7 @@ function MedsTable() {
 }
 
 const LoteDialog = ({ selectedRow, handleClose, open }) => {
+  const { formatDate } = useUI()
   const {
     data: lotes,
     isLoading,
@@ -184,17 +186,6 @@ const LoteDialog = ({ selectedRow, handleClose, open }) => {
   const handleLoteDialogOpen = () => setOpenLote(true)
   const [openLote, setOpenLote] = useState(false)
 
-
-  const formatDate = (dateString) => {
-    const date = new Date(dateString)
-    if (isNaN(date.getTime())) {
-      return ''
-    }
-    const year = date.getFullYear()
-    const month = String(date.getMonth() + 1).padStart(2, '0')
-    const day = String(date.getDate()).padStart(2, '0')
-    return `${year}-${month}-${day}`
-  }
   const columsLotes = [
     {
       field: 'codigo',
