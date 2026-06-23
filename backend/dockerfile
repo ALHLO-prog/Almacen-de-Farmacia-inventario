@@ -1,0 +1,16 @@
+# 1. Imagen base
+FROM node:26-alpine
+
+# 2. Carpeta de trabajo
+WORKDIR /app
+
+# 3. Instalación de dependencias
+COPY package*.json ./
+RUN npm install
+
+# 4. Copia del código fuente
+COPY . .
+
+# 5. Puertos y Ejecución
+EXPOSE 3000
+CMD ["npm", "start"]

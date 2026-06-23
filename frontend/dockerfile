@@ -1,0 +1,31 @@
+# --- ETAPA 1: Construcción (Build) ---
+FROM node:26-alpine AS build
+
+# Definimos el directorio de trabajo
+WORKDIR /app
+
+# Copiamos archivos de dependencias y las instalamos
+COPY package*.json ./
+RUN npm install
+
+# Copiamos el resto del código y construimos la app
+COPY . .
+
+# Recibimos el argumento de la API_URL
+ARG VITE_API_URL
+ENV VITE_API_URL=$VITE_API_URL
+
+# Compilamos (esto genera la carpeta /dist)
+RUN npm run build
+
+# --- ETAPA 2: Servidor de producción (Nginx) ---
+FROM nginx:alpine
+
+# Copiamos los archivos generados en la etapa anterior a la carpeta que sirve Nginx
+COPY --from=build /app/dist /usr/share/nginx/html
+
+# Exponemos el puerto 80
+EXPOSE 80
+
+# Arrancamos Nginx
+CMD ["nginx", "-g", "daemon off;"]

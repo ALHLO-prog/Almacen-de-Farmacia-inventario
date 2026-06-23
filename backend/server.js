@@ -39,6 +39,6 @@ io.on('connection', (socket) => {
   })
 })
 
-httpServer.listen(4444, () => {
-  console.log('server in http://127.0.0.1:4444')
+httpServer.listen(process.env.API_PORT || 3000, () => {
+  console.log('server in http://127.0.0.1:' + (process.env.API_PORT || 3000))
 })
