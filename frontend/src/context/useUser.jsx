@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 
-const useUser = create((set) => ({
+export const useUser = create((set) => ({
   user: {
     ci: 30911509,
     name: 'Andres Rodriguez',
@@ -9,5 +9,3 @@ const useUser = create((set) => ({
   },
   setUser: (newUser) => set({ user: newUser })
 }))
-
-export default useUser

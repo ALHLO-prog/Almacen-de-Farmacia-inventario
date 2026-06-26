@@ -12,7 +12,7 @@ const createNewMed = async (newMedData) => {
   const response = await fetch(URL_BASE + '/med/add', {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json' // Indispensable para que el backend lea el body
+      'Content-Type': 'application/json'
     },
     body: JSON.stringify(newMedData)
   })

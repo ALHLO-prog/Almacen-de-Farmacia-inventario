@@ -48,25 +48,24 @@ router.get('/por-fecha', async (req, res) => {
 })
 
 router.post('/add-bulk', async (req, res) => {
-  // Se espera un array: { "items": [ {...}, {...} ] }
-  const { items, usuario_id } = req.body
-
+  const { items, usuario_id, fecha } = req.body
   if (!Array.isArray(items) || items.length === 0) {
     return res
-      .status(400)
+    .status(400)
       .json({ error: 'Se requiere un array de items para el pedido' })
   }
-
+  
   try {
     await db.transaction(async (trx) => {
       // Usamos .map para procesar la lista y Promise.all para la ejecución
       await Promise.all(
         items.map(async (item) => {
+          console.log(item)
+          console.log(fecha)
           // Buscamos el lote para obtener el código actual y asegurar que existe
           const loteActual = await trx('lotes')
-            .where('id', item.lote_id)
-            .first()
-
+          .where('id', item.lote_id)
+          .first()
           if (!loteActual) {
             throw new Error(`El lote con ID ${item.lote_id} no es válido.`)
           }

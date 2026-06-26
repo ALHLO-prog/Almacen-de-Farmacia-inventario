@@ -4,17 +4,33 @@ export const useUI = create((set) => ({
   menuOpen: false,
   toggleMenu: () => set((state) => ({ menuOpen: !state.menuOpen })),
   pedidoData: {
-    user_id: null,
-    items: []
+    usuario_id: '',
+    items: [],
+    fecha: ''
   },
+  setPedidoUser: (ci) => set((state) => ({ pedidoData: { ...state.pedidoData, usuario_id: ci } })),
+  setPedidoDate: () => set((state) => ({ pedidoData: { ...state.pedidoData, fecha: state.formatDate(new Date) } })),
+  setInitialPedidoData: () => set((state) => {
+    return {
+      pedidoData: {
+        ...state.pedidoData,
+        items: [],
+        fecha: state.formatDate(new Date())
+      }
+    }
+  }),
   setPedidoData: (data) => set((state) => {
-    console.log({ ...state.pedidoData, items: [...state.pedidoData.items, data ] })
-    return { pedidoData: { ...state.pedidoData, items: [...state.pedidoData.items, data ] }}
+    return { pedidoData: { ...state.pedidoData, items: [...state.pedidoData.items, data] } }
   }),
   menuPedido: [],
-  setMenuPedido: (data) => set((state) => ({ menuPedido: [...state.menuPedido, data ] })),
-  formatDate: (dateString) => {
-    const date = new Date(dateString)
+  setInitialMenuPedido: () => set((state) => { return { menuPedido: [] } }),
+  setMenuPedido: (data) => set((state) => ({ menuPedido: [...state.menuPedido, data] })),
+
+  formatDate: (datestring) => {
+    let date
+    if (typeof datestring == 'string') { date = new Date(datestring) }
+    else if (typeof datestring == 'object') { date = datestring }
+
     if (isNaN(date.getTime())) {
       return ''
     }

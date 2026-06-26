@@ -7,7 +7,7 @@ import Registros from './components/registros/Registros.jsx'
 import Pedidos from './components/pedidos/pedidos.jsx'
 import Nav from './components/Nav.jsx'
 import { Fade } from '@mui/material'
-import useUser from './context/useUser.jsx'
+import { useUser } from './context/useUser.jsx'
 import SignUp from './components/log/signup.jsx'
 import SignIn from './components/log/signin.jsx'
 
